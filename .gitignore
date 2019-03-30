@@ -1,0 +1,7 @@
+*.o
+*.dSYM
+*.so
+.DS_Store
+sundry/
+*.config
+msoak
