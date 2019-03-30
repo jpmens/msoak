@@ -96,9 +96,14 @@ void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_m
 	 * 	 bool retain;
 	 */
 
-	if (ud->c->showtopic) {
-		fprintf(stdout, "msg: %s: %s ", ud->c->id, m->topic);
+	if (ud->c->showid) {
+		fprintf(stdout, "%s ", ud->c->id);
 	}
+
+	if (ud->c->showtopic) {
+		fprintf(stdout, "%s ", m->topic);
+	}
+
 	fprintf(stdout, "%s\n", (char *)m->payload);
 	fflush(stdout);
 }

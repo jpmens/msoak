@@ -1,4 +1,4 @@
-# MSOAK
+# msoak
 
 Subscribe to different MQTT brokers and topics simultaneously, and soak up what they have to offer.
 
@@ -37,7 +37,8 @@ Token        | Use
 `pass`       | password for the MQTT connection; see `passenv` to omit from config
 `passenv`    | name of environment variable (including `$`) from which to obtain `pass`
 `cacert`     | path to PEM-encoded CA certificate chain for TLS connections to MQTT broker
-`showtopics` | `true` or `false`, default `true`; whether to print topic name on output
+`showid`     | `true` or `false`, default `true`; whether to print `id` on output
+`showtopic`  | `true` or `false`, default `true`; whether to print topic name on output
 `topics`     | array of strings with topic branch names for _msoak_ to subscribe to.
 
 ## requirements
@@ -46,3 +47,9 @@ You will require:
 
 * [libmosquitto](http://mosquitto.org)
 * [libconfig](http://www.hyperrealm.com/libconfig/)
+
+## bugs
+
+Yes, I'm sure.
+
+What's with the strange name? Just as I started on _msoak_, I learned of `sponge(1)` and  loved the name. The rest, is history.

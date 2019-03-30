@@ -124,6 +124,11 @@ conn **load_conn(char *filename)
 				}
 			}
 
+			c->showid = true;
+			if (config_setting_lookup_bool(serv, "showid", &iv) == CONFIG_TRUE) {
+				c->showid = iv;
+			}
+
 			c->showtopic = true;
 			if (config_setting_lookup_bool(serv, "showtopic", &iv) == CONFIG_TRUE) {
 				c->showtopic = iv;

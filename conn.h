@@ -32,6 +32,7 @@ struct conn {
 	char *pass;			/* password for user, or .. */
 	char *passenv;			/* .. name of environment variable containing pass */
 	char *cacert;
+	bool showid;			/* whether or not to print out id with values  */
 	bool showtopic;			/* whether or not to print out topic with values  */
 	UT_array *topics;
 	struct mosquitto *mosq;
