@@ -60,6 +60,7 @@ conn **load_conn(char *filename)
 
 		for (n = 0; n < nservers; n++) {
 			const char *host, *user = NULL, *pass = NULL, *v;
+			char id[12];
 			int iv;
 
 			c = (conn *)calloc(sizeof(conn), sizeof(char));
@@ -70,6 +71,10 @@ conn **load_conn(char *filename)
 			c->id = NULL;
 			if (config_setting_lookup_string(serv, "id", &v)) {
 				c->id = strdup(v);
+			}
+			if (c->id == NULL) {
+				snprintf(id, sizeof(id), "%02d", n);
+				c->id = strdup(id);
 			}
 
 			c->host = NULL;
