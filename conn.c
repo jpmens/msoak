@@ -32,7 +32,7 @@ conn **load_conn(char *filename)
 
 	if (config_read_file(&config, filename) != CONFIG_TRUE) {
 		fprintf(stderr, "Error on line %d of %s: %s\n",
-			config_error_line(cf), 
+			config_error_line(cf),
 			config_error_file(cf),
 			config_error_text(cf));
 		return (NULL);
