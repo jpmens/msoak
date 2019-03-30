@@ -29,13 +29,10 @@
 #include <syslog.h>
 #include <libgen.h>
 #include <assert.h>
+#include "ud.h"
 #include "json.h"
 #include "utstring.h"
-#include "conn.h"
-
-struct userdata {
-	conn *c;
-};
+#include "print.h"
 
 static int run = true;
 
@@ -85,6 +82,7 @@ void on_disconnect(struct mosquitto *mosq, void *userdata, int reason)
 void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *m)
 {
 	struct userdata *ud = (struct userdata *)userdata;
+	conn *c = ud->c;
 
 	/*
 	 * mosquitto_message->
@@ -96,16 +94,16 @@ void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_m
 	 * 	 bool retain;
 	 */
 
-	if (ud->c->showid) {
-		fprintf(stdout, "%s ", ud->c->id);
+	if (c->showid) {
+		fprintf(stdout, "%s ", c->id);
 	}
 
-	if (ud->c->showtopic) {
+	if (c->showtopic) {
 		fprintf(stdout, "%s ", m->topic);
 	}
 
-	fprintf(stdout, "%s\n", (char *)m->payload);
-	fflush(stdout);
+	printout(ud, m->topic, (char *)m->payload);
+	fflush(stdout);		/* TODO ?? */
 }
 
 int main(int argc, char **argv)

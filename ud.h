@@ -16,32 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _CONF_H_
-#define _CONF_H_
+#ifndef _UD_H_
+# define _UD_H_
 
-#include <stdbool.h>
-#include <libconfig.h>
-#include <mosquitto.h>
-#include "utarray.h"
+#include "conn.h"
 
-struct conn {
-	char *id;			/* mandatory: connection identifier */
-	char *host;			/* MQTT broker */
-	short port;
-	char *user;
-	char *pass;			/* password for user, or .. */
-	char *passenv;			/* .. name of environment variable containing pass */
-	char *cacert;
-	bool showid;			/* whether or not to print out id with values  */
-	bool showtopic;			/* whether or not to print out topic with values  */
-	char *fmt;			/* output format */
-	UT_array *topics;
-	struct mosquitto *mosq;
-
+struct userdata {
+	conn *c;
 };
-typedef struct conn conn;
-
-conn **load_conn(char *filename);
-void free_conn(conn **conn_list);
 
 #endif

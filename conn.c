@@ -93,6 +93,11 @@ conn **load_conn(char *filename)
 				c->cacert = strdup(v);
 			}
 
+			c->fmt = NULL;
+			if (config_setting_lookup_string(serv, "fmt", &v)) {
+				c->fmt = strdup(v);
+			}
+
 			c->pass = NULL;
 			if (config_setting_lookup_string(serv, "passenv", &pass)) {
 				if (pass && *pass) {
@@ -157,6 +162,7 @@ void free_conn(conn **config)
 		if (c->user)	free(c->user);
 		if (c->pass)	free(c->pass);
 		if (c->cacert)	free(c->cacert);
+		if (c->fmt)	free(c->fmt);
 
 		if (c->topics) {
 			utarray_free(c->topics);

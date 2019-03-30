@@ -40,6 +40,40 @@ Token        | Use
 `showid`     | `true` or `false`, default `true`; whether to print `id` on output
 `showtopic`  | `true` or `false`, default `true`; whether to print topic name on output
 `topics`     | array of strings with topic branch names for _msoak_ to subscribe to.
+`fmt`        | optional output format, see below
+
+
+## formatting
+
+By default, the received payload is printed to _stdout_, optionally prefixed by the message `topic` (if `showtopic` is true and preceeded by the connection `id` if `showid` is true.
+
+If `fmt` is set, it contains a string which will be used to print the payload if it's JSON. If the payload does not begin with a brace (`{`) or the payload is not decodable as JSON, the message is ignored (i.e. no output occurs).
+
+After decoding JSON, _msoak_ attempts to substitute the payload elements into the tokens embedded in the `fmt` string.
+
+```
+fmt = "{time} {name:%-20s} ({lat:%.4lf}) {station}"
+```
+
+The /printf/-like formatting is currently brittle because _msoak_ doesn't do any data conversion. For example, if `lat` below  were published as a string, the resulting output would probably contain 0 at best.
+
+```json
+{
+  "name": "Jane J.",
+  "lat": 48.8460554,
+  "lon": 2.277998,
+  "station": "Avenue Émile Zola",
+  "time": "16:40:30"
+}
+```
+
+In the above example, with this JSON published to a local server and with the word `hola` published to TMO, we get (the `888` and `tmo` prefixing the lines are the respective `id`s of the connections):
+
+```
+888 16:40:30 Jane J.              (48.8461) Avenue Émile Zola
+tmo home/special hola
+```
+
 
 ## requirements
 

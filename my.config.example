@@ -1,0 +1,22 @@
+# this is a comment
+
+servers = (
+	    { id = "888"
+	      port = 1888,
+	      showid = true
+	      showtopic = false
+	      fmt = "{time} {name:%-20s} ({lat:%.4lf}) {station}"
+	      topics = [
+	     	"tests/sponge/#",
+	     	]
+	    },
+	    { id = "tmo"
+	      host = "test.mosquitto.org",
+	      showid = true
+	      showtopic = true
+	      topics = [
+	     	"home/special",
+		"nothome/dont",
+	     	]
+	    },
+	);
