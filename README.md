@@ -31,10 +31,11 @@ servers = ( { id = "H"
 Token        | Use
 ------------ | -----------------------------------------------------
 `id`         | identifier for the connection, also shown on output. if unset, we generate a numeric `id`
-`host`       | hostname. defaults to `localhost` if unset
+`host`       | hostname. defaults to `localhost`
 `port`       | TCP port number for the connection to `host`; defaults to `1883`
 `user`	     | username for the MQTT connection
 `pass`       | password for the MQTT connection; see `passenv` to omit from config
+`retain`     | consume retained messages; default `true`
 `passenv`    | name of environment variable (including `$`) from which to obtain `pass`
 `cacert`     | path to PEM-encoded CA certificate chain for TLS connections to MQTT broker
 `showid`     | `true` or `false`, default `true`; whether to print `id` on output

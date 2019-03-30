@@ -139,6 +139,11 @@ conn **load_conn(char *filename)
 				c->showtopic = iv;
 			}
 
+			c->showretained = true;
+			if (config_setting_lookup_bool(serv, "showretained", &iv) == CONFIG_TRUE) {
+				c->showretained = iv;
+			}
+
 			c->port = 1883;
 			if (config_setting_lookup_int(serv, "port", &iv) == CONFIG_TRUE) {
 				c->port = iv;

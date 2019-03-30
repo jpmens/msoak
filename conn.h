@@ -37,6 +37,7 @@ struct conn {
 	char *fmt;			/* output format */
 	UT_array *topics;
 	struct mosquitto *mosq;
+	bool showretained;
 
 };
 typedef struct conn conn;

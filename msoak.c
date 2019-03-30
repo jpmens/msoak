@@ -94,6 +94,9 @@ void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_m
 	 * 	 bool retain;
 	 */
 
+	if (m->retain && !c->showretained)
+		return;
+
 	if (c->showid) {
 		fprintf(stdout, "%s ", c->id);
 	}
