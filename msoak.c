@@ -212,8 +212,6 @@ int main(int argc, char **argv)
 		sleep(10);
 	}
 
-	fprintf(stderr, "Going down ...\n");
-
 	for (cp = conn_list; cp && *cp; cp++) {
 		c = *cp;
 

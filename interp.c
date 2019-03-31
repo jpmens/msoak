@@ -26,6 +26,7 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#include "version.h"
 
 static int msoak_log(lua_State *lua);
 static int msoak_strftime(lua_State *lua);
@@ -70,7 +71,7 @@ struct luadata *interp_init(char *script)
 	 */
 
 	lua_newtable(luad->L);
-		lua_pushstring(luad->L, "1.0");		/* FIXME */
+		lua_pushstring(luad->L, VERSION);
 		lua_setfield(luad->L, -2, "version");
 
 		// lua_pushstring(luad->L, "/Users/jpm/Auto/projects/on-github/owntracks/recorder/lua");
@@ -84,7 +85,7 @@ struct luadata *interp_init(char *script)
 
 	lua_setglobal(luad->L, "msoak");
 
-	fprintf(stderr, "initializing Lua hooks from `%s'\n", script);
+	// fprintf(stderr, "initializing Lua hooks from `%s'\n", script);
 
 	/* Load the Lua script */
 	if (luaL_dofile(luad->L, luad->script)) {
@@ -114,7 +115,7 @@ void interp_exit(struct luadata *luad, char *reason)
 {
 	if (luad && luad->script) {
 		l_function(luad->L, "exit");
-		fprintf(stderr, "unloading Lua: %s\n", reason);
+		// fprintf(stderr, "unloading Lua: %s\n", reason);
 		free(luad->script);
 		lua_close(luad->L);
 		free(luad);
@@ -160,7 +161,7 @@ char *interp_print(struct luadata *luad, char *fmtfunc, char *topic, JsonNode *j
 
 	}
 
-	/* Invoke `hook' function in Lua with our args */
+	/* Invoke format function in Lua with our args */
 	if (lua_pcall(luad->L, 3, 1, 0)) {
 		fprintf(stderr,  "Failed to run script: %s\n", lua_tostring(luad->L, -1));
 		exit(1);
@@ -170,9 +171,8 @@ char *interp_print(struct luadata *luad, char *fmtfunc, char *topic, JsonNode *j
 	return (res);
 }
 
-
 /*
- * --- Here come the functions we provide to Lua scripts.
+ * These utility functions are provided within the Lua script.
  */
 
 static int msoak_log(lua_State *lua)

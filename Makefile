@@ -11,7 +11,7 @@ msoak: msoak.c ud.h interp.h $(OBJS)
 conn.o: conn.c conn.h
 print.o: print.c print.h ud.h utstring.h interp.h
 json.o: json.c json.h
-interp.o: interp.c interp.h
+interp.o: interp.c interp.h version.h
 
 clean:
 	rm -f *.o
