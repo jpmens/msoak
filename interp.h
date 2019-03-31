@@ -16,15 +16,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _UD_H_
-# define _UD_H_
+#ifndef _INTERP_H_
+# define _INTERP_H_
 
-#include "interp.h"
-#include "conn.h"
+#include <lua.h>
+#include "json.h"
 
-struct userdata {
-        struct luadata *luad;		/* Lua stuff */
-	conn *c;			/* One connection */
+
+struct luadata {
+	char *script;			/* Path to Lua script in --lua-script  */
+	lua_State *L;			/* The Lua machine */
 };
+
+struct luadata *interp_init(char *luascript);
+void interp_exit(struct luadata *, char *reason);
+char *interp_print(struct luadata *luad, char *fmtfunc, char *topic, JsonNode *json);
 
 #endif

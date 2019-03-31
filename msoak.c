@@ -115,6 +115,7 @@ int main(int argc, char **argv)
 	int rc;
 	conn **conn_list, **cp, *c;
 	struct userdata *ud;
+	struct luadata *luad;
 
 	progname = basename(*argv);
 	openlog(progname, LOG_PERROR, LOG_DAEMON);
@@ -129,6 +130,13 @@ int main(int argc, char **argv)
 		return (2);
 	}
 
+
+	luad = interp_init("jp.lua");
+	if (luad == NULL) {
+		syslog(LOG_ERR, "Stopping because loading of Lua script failed");
+		exit(1);
+	}
+
 	mosquitto_lib_init();
 	signal(SIGINT, catcher);
 
@@ -138,6 +146,7 @@ int main(int argc, char **argv)
 		// show_conn(c);
 
 		ud = (struct userdata *)calloc(1, sizeof (struct userdata));
+		ud->luad = luad;
 		ud->c = c;
 
 		snprintf(clientid, sizeof(clientid), "%s_%d", progname, getpid());
@@ -212,6 +221,8 @@ int main(int argc, char **argv)
 		mosquitto_destroy(c->mosq);
 	}
 	free_conn(conn_list);
+
+	interp_exit(luad, "shutting down");
 
 	mosquitto_lib_cleanup();
 

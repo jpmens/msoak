@@ -1,16 +1,17 @@
-CFLAGS=-Wall -Werror -I. -g
-LDFLAGS=-L /usr/local/lib -lmosquitto -lconfig
+CFLAGS=-Wall -Werror -I. -g -I/usr/local/include/lua5.3/
+LDFLAGS=-L /usr/local/lib -lmosquitto -lconfig -llua
 
-OBJS = conn.o json.o print.o
+OBJS = conn.o json.o print.o interp.o
 
 all: msoak
 
-msoak: msoak.c ud.h $(OBJS)
+msoak: msoak.c ud.h interp.h $(OBJS)
 	$(CC) $(CFLAGS) -o msoak msoak.c $(OBJS) $(LDFLAGS)
 
 conn.o: conn.c conn.h
-print.o: print.c print.h ud.h utstring.h
+print.o: print.c print.h ud.h utstring.h interp.h
 json.o: json.c json.h
+interp.o: interp.c interp.h
 
 clean:
 	rm -f *.o

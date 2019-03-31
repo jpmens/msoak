@@ -19,7 +19,9 @@
 #include "conn.h"
 #include "print.h"
 #include "utstring.h"
+#include "interp.h"
 
+#if 0
 static char *boolean(bool bf)
 {
 	// obtain externally
@@ -84,10 +86,13 @@ static void substitute(char *fmt, JsonNode *json)
 
 	printf("%s\n", utstring_body(ut));
 }
+#endif
+
 void printout(struct userdata *ud, char *topic, char *payload)
 {
 	JsonNode *json;
 	conn *c = ud->c;
+	char *res;
 
 	if (!payload || !*payload) {
 		return;
@@ -104,9 +109,12 @@ void printout(struct userdata *ud, char *topic, char *payload)
 		return;
 	}
 
-	// puts(payload); // debug
+	res = interp_print(ud->luad, c->fmt, topic, json);
+	if (res != NULL) {
+		printf("%s\n", res);
+	}
 
-	substitute(c->fmt, json);
+	// substitute(c->fmt, json);
 	json_delete(json);
 }
 
