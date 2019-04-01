@@ -7,24 +7,30 @@ Subscribe to different MQTT brokers and topics simultaneously, and soak up what 
 We use [libconfig](http://www.hyperrealm.com/libconfig/) to read configuration files, each of which has a `servers` array (or list) of settings per server. Please note how each _server_ is in a block of braces.
 
 ```
-servers = ( { id = "H"
-	      topics = [
-	     	"owntracks/jpm/+",
-		"test",
-		"nothing" ]
-	    },
-	    { id = "L"
-	      host = "192.0.2.42",
-	      port = 8883
-	      user = "jpm"
-	      pass = "secrit"
-	      cacert = "le-all.pem"
+# this is a comment
+
+verbose = true
+luascript = "my.lua"
+
+servers = (
+	    { id = "888"
+	      port = 1883,
+	      showid = true
 	      showtopic = false
+	      fmt = "station"
 	      topics = [
-	     	"owntracks/+/+",
-		"nas/home"
+	     	"tests/sponge/#",
 	     	]
-	    }
+	    },
+	    { id = "tmo"
+	      host = "test.mosquitto.org",
+	      showid = true
+	      showtopic = true
+	      topics = [
+	     	"home/special",
+		"nothome/dont",
+	     	]
+	    },
 	);
 ```
 
@@ -41,22 +47,46 @@ Token        | Use
 `showid`     | `true` or `false`, default `true`; whether to print `id` on output
 `showtopic`  | `true` or `false`, default `true`; whether to print topic name on output
 `topics`     | array of strings with topic branch names for _msoak_ to subscribe to.
-`fmt`        | optional output format, see below
+`fmt`        | optional name of Lua formatting (see below)
 
 
 ## formatting
 
 By default, the received payload is printed to _stdout_, optionally prefixed by the message `topic` (if `showtopic` is true and preceeded by the connection `id` if `showid` is true.
 
-If `fmt` is set, it contains a string which will be used to print the payload if it's JSON. If the payload does not begin with a brace (`{`) or the payload is not decodable as JSON, the message is ignored (i.e. no output occurs).
+If `fmt` is set, it contains a string with the name of a Lua function from the Lua script. this function is used to format the payload _msoak_ receives; the return value of the function is printed.
 
-After decoding JSON, _msoak_ attempts to substitute the payload elements into the tokens embedded in the `fmt` string.
+If _msoak_ can decode the payload into JSON (i.e. it begins with a brace (`{`) and is JSON), it will invoke the Lua function to obtain output.
+
+If the above configuration, the `luascript` is loaded from `my.lua` and contains the following:
+
+```lua
+function init()
+	if msoak.verbose then 
+		msoak.log(msoak.luascript .. " starting at " .. msoak.strftime("%FT%TZ"))
+	end
+end
+
+function station(topic, _type, d)
+	
+	s = string.format("%s %-20s (%.4f) %s  -> now=%s",
+		d.time, d.name, d.lat, d.station,
+		msoak.strftime("%TZ"))
+	return s
+
+end
+
+function exit()
+	msoak.log("Hasta la vista, baby!")
+end
 
 ```
-fmt = "{time} {name:%-20s} ({lat:%.4lf}) {station}"
-```
 
-The /printf/-like formatting is currently brittle because _msoak_ doesn't do any data conversion. For example, if `lat` below  were published as a string, the resulting output would probably contain 0 at best.
+The optional `init()` and `exit()` functions are invoked when _msoak_ begins and ends respectively. The `station` function is invoked for each message _msoak_ receives because the configuration states
+
+```
+fmt = "station"
+```
 
 ```json
 {
@@ -64,14 +94,14 @@ The /printf/-like formatting is currently brittle because _msoak_ doesn't do any
   "lat": 48.8460554,
   "lon": 2.277998,
   "station": "Avenue Émile Zola",
-  "time": "16:40:30"
+  "time": "14:41:13"
 }
 ```
 
 In the above example, with this JSON published to a local server and with the word `hola` published to TMO, we get (the `888` and `tmo` prefixing the lines are the respective `id`s of the connections):
 
 ```
-888 16:40:30 Jane J.              (48.8461) Avenue Émile Zola
+888 14:41:13 Jane J.              (48.8461) Avenue Émile Zola  -> now=12:43:28Z
 tmo home/special hola
 ```
 

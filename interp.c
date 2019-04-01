@@ -74,6 +74,9 @@ struct luadata *interp_init(char *script, bool verbose)
 		lua_pushstring(luad->L, VERSION);
 		lua_setfield(luad->L, -2, "version");
 
+		lua_pushstring(luad->L, script);
+		lua_setfield(luad->L, -2, "luascript");
+
 		lua_pushboolean(luad->L, verbose);
 		lua_setfield(luad->L, -2, "verbose");
 

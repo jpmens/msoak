@@ -1,11 +1,14 @@
 # this is a comment
 
+verbose = true
+luascript = "my.lua.example"
+
 servers = (
 	    { id = "888"
-	      port = 1888,
+	      port = 1883,
 	      showid = true
 	      showtopic = false
-	      fmt = "{time} {name:%-20s} ({lat:%.4lf}) {station}"
+	      fmt = "station"
 	      topics = [
 	     	"tests/sponge/#",
 	     	]
