@@ -105,6 +105,11 @@ conn **load_conn(char *filename, gl **g)
 				c->user = strdup(user);
 			}
 
+			c->clientid = NULL;
+			if (config_setting_lookup_string(serv, "clientid", &v)) {
+				c->clientid = strdup(v);
+			}
+
 			c->cacert = NULL;
 			if (config_setting_lookup_string(serv, "cacert", &v)) {
 				c->cacert = strdup(v);
@@ -182,6 +187,7 @@ void free_conn(conn **config, gl *gl)
 		if (c->id)	free(c->id);
 		if (c->host)	free(c->host);
 		if (c->user)	free(c->user);
+		if (c->clientid)	free(c->clientid);
 		if (c->pass)	free(c->pass);
 		if (c->cacert)	free(c->cacert);
 		if (c->fmt)	free(c->fmt);

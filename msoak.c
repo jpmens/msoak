@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 		ud->c = c;
 		ud->verbose = g->verbose;
 
-		snprintf(clientid, sizeof(clientid), "%s_%d", progname, getpid());
+		snprintf(clientid, sizeof(clientid), "%s", (c->clientid) ? c->clientid : progname);
 		c->mosq = mosquitto_new(clientid, true, ud);
 		if (!c->mosq) {
 			syslog(LOG_ERR, "Error: Out of memory");

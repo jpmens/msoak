@@ -34,6 +34,7 @@ struct conn {
 	char *id;			/* mandatory: connection identifier */
 	char *host;			/* MQTT broker */
 	short port;
+	char *clientid;
 	char *user;
 	char *pass;			/* password for user, or .. */
 	char *passenv;			/* .. name of environment variable containing pass */
