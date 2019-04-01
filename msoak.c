@@ -43,6 +43,31 @@ static void catcher(int signo)
 
 static char *mosquitto_reason(int rc)
 {
+
+	static char *reasons[] = {
+		"MOSQ_ERR_SUCCESS = 0",
+		"MOSQ_ERR_NOMEM = 1",
+		"MOSQ_ERR_PROTOCOL = 2",
+		"MOSQ_ERR_INVAL = 3",
+		"MOSQ_ERR_NO_CONN = 4",
+		"MOSQ_ERR_CONN_REFUSED = 5",
+		"MOSQ_ERR_NOT_FOUND = 6",
+		"MOSQ_ERR_CONN_LOST = 7",
+		"MOSQ_ERR_TLS = 8",
+		"MOSQ_ERR_PAYLOAD_SIZE = 9",
+		"MOSQ_ERR_NOT_SUPPORTED = 10",
+		"MOSQ_ERR_AUTH = 11",
+		"MOSQ_ERR_ACL_DENIED = 12",
+		"MOSQ_ERR_UNKNOWN = 13",
+		"MOSQ_ERR_ERRNO = 14",
+		"MOSQ_ERR_EAI = 15",
+		"MOSQ_ERR_PROXY = 16",
+		"MOSQ_ERR_PLUGIN_DEFER = 17",
+		"MOSQ_ERR_MALFORMED_UTF8 = 18",
+		"MOSQ_ERR_KEEPALIVE = 19",
+		"MOSQ_ERR_LOOKUP = 20"
+	};
+#if 0
 	static char *reasons[] = {
 		"Connection accepted",                                  /* 0x00 */
 		"Connection refused: incorrect protocol version",       /* 0x01 */
@@ -53,8 +78,9 @@ static char *mosquitto_reason(int rc)
 		"Connection refused: not authorized",                   /* 0x06 */
 		"Connection refused: TLS error",                        /* 0x07 */
 	};
+#endif
 
-	return ((rc >= 0 && rc <= 0x07) ? reasons[rc] : "unknown reason");
+	return ((rc >= 0 && rc <= MOSQ_ERR_LOOKUP) ? reasons[rc] : "unknown reason");
 }
 
 void on_connect(struct mosquitto *mosq, void *userdata, int reason)
@@ -193,7 +219,7 @@ int main(int argc, char **argv)
 				NULL);		/* ciphers */
 		}
 
-		rc = mosquitto_connect(c->mosq, ud->c->host, ud->c->port, 60);
+		rc = mosquitto_connect_async(c->mosq, ud->c->host, ud->c->port, 60);
 		if (rc) {
 			if (rc == MOSQ_ERR_ERRNO) {
 				strerror_r(errno, err, 1024);
@@ -201,8 +227,10 @@ int main(int argc, char **argv)
 			} else {
 				syslog(LOG_ERR, "unable to connect to %s:%d: (%d)", ud->c->host, ud->c->port, rc);
 			}
+			/* do not disconnect and exit; we're connecting asynchronously
 			mosquitto_lib_cleanup();
 			return rc;
+			*/
 		}
 
 		if ((rc = mosquitto_loop_start(c->mosq)) != MOSQ_ERR_SUCCESS) {
