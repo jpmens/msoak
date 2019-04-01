@@ -41,10 +41,12 @@ The configuration file consits of global variables and a block of servers.
 Token        | Use
 ------------ | -----------------------------------------------------
 `luascript`  | path to the Lua script to use
-`verbose`    | `true` (default) or `false`)
+`verbose`    | `true` (default) or `false`
 
 
 ### servers
+
+Each element of the `server` array defines one server:
 
 Token        | Use
 ------------ | -----------------------------------------------------
@@ -59,7 +61,7 @@ Token        | Use
 `showid`     | `true` or `false`, default `true`; whether to print `id` on output
 `showtopic`  | `true` or `false`, default `true`; whether to print topic name on output
 `topics`     | array of strings with topic branch names for _msoak_ to subscribe to.
-`fmt`        | optional name of Lua formatting (see below)
+`fmt`        | optional name of Lua formatting function (see below)
 
 
 ## formatting
@@ -124,6 +126,20 @@ You will require:
 
 * [libmosquitto](http://mosquitto.org)
 * [libconfig](http://www.hyperrealm.com/libconfig/)
+* [Lua](http://www.lua.org)
+
+### macos
+
+```
+brew install lua
+brew install libconfig
+```
+
+### debian
+
+```
+apt-get install libconfig-dev liblua5.3-dev
+```
 
 ## bugs
 
