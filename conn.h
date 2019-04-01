@@ -45,6 +45,7 @@ struct conn {
 	UT_array *topics;
 	struct mosquitto *mosq;
 	bool showretained;
+	int qos;
 
 };
 typedef struct conn conn;

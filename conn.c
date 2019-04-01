@@ -151,6 +151,11 @@ conn **load_conn(char *filename, gl **g)
 				}
 			}
 
+			c->qos = 1;
+			if (config_setting_lookup_int(serv, "qos", &iv) == CONFIG_TRUE) {
+				c->qos = iv;
+			}
+
 			c->showid = true;
 			if (config_setting_lookup_bool(serv, "showid", &iv) == CONFIG_TRUE) {
 				c->showid = iv;

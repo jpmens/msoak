@@ -54,6 +54,7 @@ Token        | Use
 `host`       | hostname. defaults to `localhost`
 `port`       | TCP port number for the connection to `host`; defaults to `1883`
 `clientid`   | MQTT clientId to use (default: program name)
+`qos`        | MQTT QoS (default `1`)
 `user`	     | username for the MQTT connection
 `pass`       | password for the MQTT connection; see `passenv` to omit from config
 `retain`     | consume retained messages; default `true`

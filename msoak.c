@@ -65,8 +65,8 @@ void on_connect(struct mosquitto *mosq, void *userdata, int reason)
 
 	while ((topic = (char **)utarray_next(c->topics, topic))) {
 		if (ud->verbose)
-			printf("%s: subscribe to %s\n", c->id, *topic);
-		mosquitto_subscribe(mosq, NULL, *topic, 1);
+			printf("%s: subscribe to %s (q=%d)\n", c->id, *topic, c->qos);
+		mosquitto_subscribe(mosq, NULL, *topic, c->qos);
 	}
 }
 
