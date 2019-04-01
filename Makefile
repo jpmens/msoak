@@ -1,5 +1,5 @@
-CFLAGS=-Wall -Werror -I. -I/usr/local/include/lua5.3/
-LDFLAGS=-L /usr/local/lib -lmosquitto -lconfig -llua
+CFLAGS=-Wall -Werror -I. `pkg-config --cflags lua5.3`
+LDFLAGS=-L /usr/local/lib -lmosquitto -lconfig `pkg-config --libs lua5.3`
 
 OBJS = conn.o json.o print.o interp.o
 

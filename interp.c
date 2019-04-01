@@ -56,7 +56,6 @@ static int l_function(lua_State *L, char *name)
 struct luadata *interp_init(char *script, bool verbose)
 {
 	struct luadata *luad;
-	int rc;
 
 	if ((luad = malloc(sizeof(struct luadata))) == NULL)
 		return (NULL);
@@ -99,7 +98,7 @@ struct luadata *interp_init(char *script, bool verbose)
 		return (NULL);
 	}
 
-	rc = l_function(luad->L, "init");
+	l_function(luad->L, "init");
 #if 0
 	if (rc != 0) {
 
@@ -197,7 +196,7 @@ static int msoak_log(lua_State *lua)
  * msoak.strftime(format, seconds)
  * Perform a strtime(3) for Lua with the specified format and
  * seconds, and return the string result to Lua. As a special
- * case, if `seconds' is negative, use current time.
+ * case, if `seconds' is less than one, use current time.
  */
 
 static int msoak_strftime(lua_State *lua)
@@ -209,8 +208,9 @@ static int msoak_strftime(lua_State *lua)
 
 	if (lua_gettop(lua) >= 1) {
 		fmt =  lua_tostring(lua, 1);
-		if ((secs =  lua_tonumber(lua, 2)) < 1)
+		if ((secs =  lua_tonumber(lua, 2)) < 1) {
 			secs = time(0);
+		}
 
 		if ((tm = gmtime(&secs)) != NULL) {
 			strftime(buf, sizeof(buf), fmt, tm);
