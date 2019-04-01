@@ -34,6 +34,18 @@ servers = (
 	);
 ```
 
+The configuration file consits of global variables and a block of servers.
+
+### globals
+
+Token        | Use
+------------ | -----------------------------------------------------
+`luascript`  | path to the Lua script to use
+`verbose`    | `true` (default) or `false`)
+
+
+### servers
+
 Token        | Use
 ------------ | -----------------------------------------------------
 `id`         | identifier for the connection, also shown on output. if unset, we generate a numeric `id`
