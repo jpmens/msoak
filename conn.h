@@ -24,6 +24,12 @@
 #include <mosquitto.h>
 #include "utarray.h"
 
+struct gl {
+	char *luascript;
+	bool verbose;
+};
+typedef struct gl gl;
+
 struct conn {
 	char *id;			/* mandatory: connection identifier */
 	char *host;			/* MQTT broker */
@@ -42,7 +48,7 @@ struct conn {
 };
 typedef struct conn conn;
 
-conn **load_conn(char *filename);
-void free_conn(conn **conn_list);
+conn **load_conn(char *filename, gl **gl);
+void free_conn(conn **conn_list, gl *gl);
 
 #endif

@@ -53,7 +53,7 @@ static int l_function(lua_State *L, char *name)
 	return (rc);
 }
 
-struct luadata *interp_init(char *script)
+struct luadata *interp_init(char *script, bool verbose)
 {
 	struct luadata *luad;
 	int rc;
@@ -73,6 +73,9 @@ struct luadata *interp_init(char *script)
 	lua_newtable(luad->L);
 		lua_pushstring(luad->L, VERSION);
 		lua_setfield(luad->L, -2, "version");
+
+		lua_pushboolean(luad->L, verbose);
+		lua_setfield(luad->L, -2, "verbose");
 
 		// lua_pushstring(luad->L, "/Users/jpm/Auto/projects/on-github/owntracks/recorder/lua");
 		// lua_setfield(luad->L, -2, "luapath");

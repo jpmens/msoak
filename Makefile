@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Werror -I. -g -I/usr/local/include/lua5.3/
+CFLAGS=-Wall -Werror -I. -I/usr/local/include/lua5.3/
 LDFLAGS=-L /usr/local/lib -lmosquitto -lconfig -llua
 
 OBJS = conn.o json.o print.o interp.o

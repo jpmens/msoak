@@ -25,6 +25,7 @@
 struct userdata {
         struct luadata *luad;		/* Lua stuff */
 	conn *c;			/* One connection */
+	bool verbose;
 };
 
 #endif

@@ -21,73 +21,6 @@
 #include "utstring.h"
 #include "interp.h"
 
-#if 0
-static char *boolean(bool bf)
-{
-	// obtain externally
-	//
-	
-	return (bf) ? "AN" : "AUS";
-}
-
-static void substitute(char *fmt, JsonNode *json)
-{
-	JsonNode *e;
-	static UT_string *ut, *kw;
-	char *bp;
-
-	utstring_renew(ut);
-
-	for (bp = fmt; bp && *bp; bp++) {
-		if (*bp == '\\' && *(bp + 1)) {
-			utstring_printf(ut, "%c", *++bp);
-			continue;
-		} else if (*bp == '{') {
-			char *f = NULL;
-			utstring_renew(kw);
-			for (++bp; bp && *bp && *bp != '}'; ) {	/* skip over { */
-				utstring_printf(kw, "%c", *bp++);
-			}
-
-			/* kw might contain a printf-type format string, for example
-			 * "lat:8.4f". Truncate at colon, and save the rest as fmt
-			 */
-
-			f = strchr(utstring_body(kw), ':');
-			if (f != NULL) {
-				*f++ = 0;	/* f now has "%6d" or "%-10s" in it */
-				// printf("PRINTF=[%s]\n", f);
-			}
-			// printf("KW=[%s]\n", utstring_body(kw));
-
-			if ((e = json_find_member(json, utstring_body(kw))) != NULL) {
-				//static char *jtypes[] = { "NULL", "BOOL", "STRING", "NUMBER",
-				//			  "ARRAY", "OBJECT" };
-
-				// printf("json type == %s\n", jtypes[e->tag]);
-				if (e->tag == JSON_STRING) {
-					f = (f) ? f : "%s";
-					utstring_printf(ut, f, e->string_);
-				} else if (e->tag == JSON_NUMBER) {
-					f = (f) ? f : "%2lg";
-					utstring_printf(ut, f, e->number_);
-				} else if (e->tag == JSON_BOOL) {
-					f = (f) ? f : "%s";
-					utstring_printf(ut, f, boolean(e->bool_));
-				}
-			}
-
-			// printf("REST=--->%s<---\n", bp);
-
-			continue;
-		}
-		utstring_printf(ut, "%c", *bp);
-	}
-
-	printf("%s\n", utstring_body(ut));
-}
-#endif
-
 void printout(struct userdata *ud, char *topic, char *payload)
 {
 	JsonNode *json;
@@ -114,7 +47,6 @@ void printout(struct userdata *ud, char *topic, char *payload)
 		printf("%s\n", res);
 	}
 
-	// substitute(c->fmt, json);
 	json_delete(json);
 }
 

@@ -22,11 +22,13 @@
 
 #define MAXCONF		10	/* maximum servers in config */
 
-conn **load_conn(char *filename)
+conn **load_conn(char *filename, gl **g)
 {
 	conn **conn_list, *c;
 	config_t config, *cf;
 	config_setting_t *servers;
+	const char *sval;
+	int ival;
 
 	config_init(cf = &config);
 
@@ -38,8 +40,22 @@ conn **load_conn(char *filename)
 		return (NULL);
 	}
 
-	if ((conn_list = malloc(sizeof(conn) * (MAXCONF + 1))) == NULL)
+	if ((*g = (struct gl *)calloc(sizeof(char), sizeof(gl))) == NULL) {
 		return (NULL);
+	}
+
+	if ((conn_list = malloc(sizeof(conn) * (MAXCONF + 1))) == NULL) {
+		return (NULL);
+	}
+
+	if (config_lookup_string(cf, "luascript", &sval)) {
+		(*g)->luascript = strdup(sval);
+	}
+
+	ival = false;
+	if (config_lookup_bool(cf, "verbose", &ival)) {
+		(*g)->verbose = ival;
+	}
 
 	/*
 	 * In the config we have "servers" which is an array
@@ -57,6 +73,7 @@ conn **load_conn(char *filename)
 	servers = config_lookup(cf, "servers");
 	if (servers != NULL) {
 		int n, nservers = config_setting_length(servers);
+
 
 		for (n = 0; n < nservers; n++) {
 			const char *host, *user = NULL, *pass = NULL, *v;
@@ -156,7 +173,7 @@ conn **load_conn(char *filename)
 	return (conn_list);
 }
 
-void free_conn(conn **config)
+void free_conn(conn **config, gl *gl)
 {
 	conn **cp;
 
@@ -175,19 +192,25 @@ void free_conn(conn **config)
 		free(c);
 	}
 	free(config);
+
+	if (gl->luascript) free(gl->luascript);
+	free(gl);
 }
 
 #ifdef TESTING
 int main()
 {
 	conn **conn, *c;
+	gl *g;
 	int n = 0;
 
-	conn = load_conn("test.config");
+	conn = load_conn("test.config", &g);
 	if (conn == NULL) {
 		fprintf(stderr, "Can't load conf\n");
 		return 1;
 	}
+
+	printf("lua script: %s\n", g->luascript);
 
 	for (n = 0; conn[n] != NULL; n++) {
 		char **t;
@@ -199,7 +222,7 @@ int main()
 			printf("            topic=[%s]\n", *t);
 		}
 	}
-	free_conn(conn);
+	free_conn(conn, g);
 	return 0;
 }
 #endif

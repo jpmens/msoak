@@ -64,7 +64,8 @@ void on_connect(struct mosquitto *mosq, void *userdata, int reason)
 	char **topic = NULL;
 
 	while ((topic = (char **)utarray_next(c->topics, topic))) {
-		printf("%s: subscribe to %s\n", c->id, *topic);
+		if (ud->verbose)
+			printf("%s: subscribe to %s\n", c->id, *topic);
 		mosquitto_subscribe(mosq, NULL, *topic, 1);
 	}
 }
@@ -116,6 +117,7 @@ int main(int argc, char **argv)
 	conn **conn_list, **cp, *c;
 	struct userdata *ud;
 	struct luadata *luad;
+	gl *g;
 
 	progname = basename(*argv);
 	openlog(progname, LOG_PERROR, LOG_DAEMON);
@@ -125,13 +127,13 @@ int main(int argc, char **argv)
 		return (2);
 	}
 
-	if ((conn_list = load_conn(argv[1])) == NULL) {
+	if ((conn_list = load_conn(argv[1], &g)) == NULL) {
 		syslog(LOG_ERR, "Cannot open config at %s: %m", argv[1]);
 		return (2);
 	}
 
 
-	luad = interp_init("jp.lua");
+	luad = interp_init(g->luascript, g->verbose);
 	if (luad == NULL) {
 		syslog(LOG_ERR, "Stopping because loading of Lua script failed");
 		exit(1);
@@ -148,6 +150,7 @@ int main(int argc, char **argv)
 		ud = (struct userdata *)calloc(1, sizeof (struct userdata));
 		ud->luad = luad;
 		ud->c = c;
+		ud->verbose = g->verbose;
 
 		snprintf(clientid, sizeof(clientid), "%s_%d", progname, getpid());
 		c->mosq = mosquitto_new(clientid, true, ud);
@@ -218,7 +221,7 @@ int main(int argc, char **argv)
 		mosquitto_disconnect(c->mosq);
 		mosquitto_destroy(c->mosq);
 	}
-	free_conn(conn_list);
+	free_conn(conn_list, g);
 
 	interp_exit(luad, "shutting down");
 

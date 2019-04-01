@@ -21,6 +21,7 @@
 
 #include <lua.h>
 #include "json.h"
+#include "ud.h"
 
 
 struct luadata {
@@ -28,7 +29,7 @@ struct luadata {
 	lua_State *L;			/* The Lua machine */
 };
 
-struct luadata *interp_init(char *luascript);
+struct luadata *interp_init(char *luascript, bool verbose);
 void interp_exit(struct luadata *, char *reason);
 char *interp_print(struct luadata *luad, char *fmtfunc, char *topic, JsonNode *json);
 
