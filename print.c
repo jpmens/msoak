@@ -23,7 +23,7 @@
 
 void printout(struct userdata *ud, char *topic, char *payload)
 {
-	JsonNode *json;
+	JsonNode *json = NULL;
 	conn *c = ud->c;
 	char *res;
 
@@ -31,22 +31,19 @@ void printout(struct userdata *ud, char *topic, char *payload)
 		return;
 	}
 
-        if (!c->fmt) {
+        if (!c->fmt || !*c->fmt) {
                 fprintf(stdout, "%s\n", payload);
 		return;
 	}
 
 	/* If payload isn't JSON, return silently */
-
-	if (*payload != '{' || ((json = json_decode(payload)) == NULL)) {
-		return;
+	if (*payload == '{') {
+		if ((json = json_decode(payload)) != NULL) {
+			if ((res = interp_print(ud->luad, c->fmt, topic, json)) != NULL) {
+				printf("%s\n", res);
+			}
+			json_delete(json);
+		}
 	}
-
-	res = interp_print(ud->luad, c->fmt, topic, json);
-	if (res != NULL) {
-		printf("%s\n", res);
-	}
-
-	json_delete(json);
 }
 
