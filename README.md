@@ -121,6 +121,16 @@ In the above example, with this JSON published to a local server and with the wo
 tmo home/special hola
 ```
 
+## json
+
+The JSON payload is passed to the Lua function as a table with the following additional elements in it:
+
+variable     | value
+------------ | -----------------------------------------------------
+`_conn_id`   | the original connection _id_
+`_conn_host` | the hostname of the connection
+`_conn_port` | the port number of the connection
+`_conn_topic` | the MQTT topic on which the payload was received
 
 ## requirements
 
@@ -130,17 +140,17 @@ You will require:
 * [libconfig](http://www.hyperrealm.com/libconfig/)
 * [Lua](http://www.lua.org)
 
-### macos
+#### macos
 
 ```
 brew install lua
 brew install libconfig
 ```
 
-### debian
+#### debian
 
 ```
-apt-get install libconfig-dev liblua5.3-dev
+apt-get install libconfig-dev liblua5.2-dev # or liblua5.3-dev
 ```
 
 ## bugs
@@ -148,3 +158,7 @@ apt-get install libconfig-dev liblua5.3-dev
 Yes, I'm sure.
 
 What's with the strange name? Just as I started on _msoak_, I learned of `sponge(1)` and  loved the name. The rest, is history.
+
+## see also
+
+* [mqttwarn](https://github.com/jpmens/mqttwarn)
