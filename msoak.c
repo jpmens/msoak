@@ -45,40 +45,28 @@ static char *mosquitto_reason(int rc)
 {
 
 	static char *reasons[] = {
-		"MOSQ_ERR_SUCCESS = 0",
-		"MOSQ_ERR_NOMEM = 1",
-		"MOSQ_ERR_PROTOCOL = 2",
-		"MOSQ_ERR_INVAL = 3",
-		"MOSQ_ERR_NO_CONN = 4",
-		"MOSQ_ERR_CONN_REFUSED = 5",
-		"MOSQ_ERR_NOT_FOUND = 6",
-		"MOSQ_ERR_CONN_LOST = 7",
-		"MOSQ_ERR_TLS = 8",
-		"MOSQ_ERR_PAYLOAD_SIZE = 9",
-		"MOSQ_ERR_NOT_SUPPORTED = 10",
-		"MOSQ_ERR_AUTH = 11",
-		"MOSQ_ERR_ACL_DENIED = 12",
-		"MOSQ_ERR_UNKNOWN = 13",
-		"MOSQ_ERR_ERRNO = 14",
-		"MOSQ_ERR_EAI = 15",
-		"MOSQ_ERR_PROXY = 16",
-		"MOSQ_ERR_PLUGIN_DEFER = 17",
-		"MOSQ_ERR_MALFORMED_UTF8 = 18",
-		"MOSQ_ERR_KEEPALIVE = 19",
-		"MOSQ_ERR_LOOKUP = 20"
+		"MOSQ_ERR_SUCCESS",		/*  0 */
+		"MOSQ_ERR_NOMEM",		/*  1 */
+		"MOSQ_ERR_PROTOCOL",		/*  2 */
+		"MOSQ_ERR_INVAL",		/*  3 */
+		"MOSQ_ERR_NO_CONN",		/*  4 */
+		"MOSQ_ERR_CONN_REFUSED",	/*  5 */
+		"MOSQ_ERR_NOT_FOUND",		/*  6 */
+		"MOSQ_ERR_CONN_LOST",		/*  7 */
+		"MOSQ_ERR_TLS",			/*  8 */
+		"MOSQ_ERR_PAYLOAD_SIZE",	/*  9 */
+		"MOSQ_ERR_NOT_SUPPORTED",	/* 10 */
+		"MOSQ_ERR_AUTH",		/* 11 */
+		"MOSQ_ERR_ACL_DENIED",		/* 12 */
+		"MOSQ_ERR_UNKNOWN",		/* 13 */
+		"MOSQ_ERR_ERRNO",		/* 14 */
+		"MOSQ_ERR_EAI",			/* 15 */
+		"MOSQ_ERR_PROXY",		/* 16 */
+		"MOSQ_ERR_PLUGIN_DEFER",	/* 17 */
+		"MOSQ_ERR_MALFORMED_UTF8",	/* 18 */
+		"MOSQ_ERR_KEEPALIVE",		/* 19 */
+		"MOSQ_ERR_LOOKUP"		/* 20 */
 	};
-#if 0
-	static char *reasons[] = {
-		"Connection accepted",                                  /* 0x00 */
-		"Connection refused: incorrect protocol version",       /* 0x01 */
-		"Connection refused: invalid client identifier",        /* 0x02 */
-		"Connection refused: server unavailable",               /* 0x03 */
-		"Connection refused: code=0x04",                        /* 0x04 */
-		"Connection refused: bad username or password",         /* 0x05 */
-		"Connection refused: not authorized",                   /* 0x06 */
-		"Connection refused: TLS error",                        /* 0x07 */
-	};
-#endif
 
 	return ((rc >= 0 && rc <= MOSQ_ERR_LOOKUP) ? reasons[rc] : "unknown reason");
 }
@@ -101,8 +89,13 @@ void on_disconnect(struct mosquitto *mosq, void *userdata, int reason)
 	struct userdata *ud = (struct userdata *)userdata;
 
 	if (reason) {
-		syslog(LOG_INFO, "Disconnected from %s. Reason: 0x%X [%s]",
+		if (reason == MOSQ_ERR_ERRNO) {
+			syslog(LOG_INFO, "Disconnected from %s. Reason: 0x%02X [%s] %m",
 				 ud->c->id, reason, mosquitto_reason(reason));
+		} else {
+			syslog(LOG_INFO, "Disconnected from %s. Reason: 0x%02X [%s]",
+				 ud->c->id, reason, mosquitto_reason(reason));
+		}
 	}
 }
 
