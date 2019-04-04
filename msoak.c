@@ -79,7 +79,8 @@ void on_connect(struct mosquitto *mosq, void *userdata, int reason)
 
 	while ((topic = (char **)utarray_next(c->topics, topic))) {
 		if (ud->verbose)
-			printf("%s: subscribe to %s (q=%d)\n", c->id, *topic, c->qos);
+			printf("%s: subscribe to %s (q=%d) %s:%d\n",
+				c->id, *topic, c->qos, c->host, c->port);
 		mosquitto_subscribe(mosq, NULL, *topic, c->qos);
 	}
 }
@@ -135,7 +136,7 @@ int main(int argc, char **argv)
 	int rc;
 	conn **conn_list, **cp, *c;
 	struct userdata *ud;
-	struct luadata *luad;
+	struct luadata *luad = NULL;
 	gl *g;
 
 	progname = basename(*argv);
@@ -151,11 +152,12 @@ int main(int argc, char **argv)
 		return (2);
 	}
 
-
-	luad = interp_init(g->luascript, g->verbose);
-	if (luad == NULL) {
-		syslog(LOG_ERR, "Stopping because loading of Lua script failed");
-		exit(1);
+	if (g->luascript && *g->luascript) {
+		luad = interp_init(g->luascript, g->verbose);
+		if (luad == NULL) {
+			syslog(LOG_ERR, "Stopping because loading of Lua script failed");
+			exit(1);
+		}
 	}
 
 	mosquitto_lib_init();
@@ -212,6 +214,8 @@ int main(int argc, char **argv)
 				NULL);		/* ciphers */
 		}
 
+
+		// rc = mosquitto_connect(c->mosq, ud->c->host, ud->c->port, 60);
 		rc = mosquitto_connect_async(c->mosq, ud->c->host, ud->c->port, 60);
 		if (rc) {
 			if (rc == MOSQ_ERR_ERRNO) {
@@ -244,7 +248,9 @@ int main(int argc, char **argv)
 	}
 	free_conn(conn_list, g);
 
-	interp_exit(luad, "shutting down");
+	if (luad) {
+		interp_exit(luad, "shutting down");
+	}
 
 	mosquitto_lib_cleanup();
 

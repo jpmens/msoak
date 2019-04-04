@@ -40,7 +40,7 @@ The configuration file consits of global variables and a block of servers.
 
 Token        | Use
 ------------ | -----------------------------------------------------
-`luascript`  | path to the Lua script to use
+`luascript`  | path to the Lua script to use; no Lua processing if not specified
 `verbose`    | `true` (default) or `false`
 
 
@@ -131,6 +131,8 @@ variable     | value
 `_conn_host` | the hostname of the connection
 `_conn_port` | the port number of the connection
 `_conn_topic` | the MQTT topic on which the payload was received
+
+Note that if no `luascript` was specified and the payload contains JSON it will be dumped as is to _stdout_.
 
 ## requirements
 
