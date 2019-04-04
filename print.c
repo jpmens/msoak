@@ -36,25 +36,29 @@ void printout(struct userdata *ud, char *topic, char *payload)
 		return;
 	}
 
-	/* If payload isn't JSON, return silently */
-	if (*payload == '{') {
-		if ((json = json_decode(payload)) != NULL) {
-			/*
-			 * add some bits and pieces from our connection so that the
-			 * invokee can discover where this data originates from.
-			 */
+	if (ud->luad) {
+		/* If payload isn't JSON, return silently */
+		if (*payload == '{') {
+			if ((json = json_decode(payload)) != NULL) {
+				/*
+				 * add some bits and pieces from our connection so that the
+				 * invokee can discover where this data originates from.
+				 */
 
-			json_append_member(json, "_conn_id", json_mkstring(c->id));
-			json_append_member(json, "_conn_host", json_mkstring(c->host));
-			json_append_member(json, "_conn_port", json_mknumber(c->port));
-			json_append_member(json, "_conn_topic", json_mkstring(topic));
+				json_append_member(json, "_conn_id", json_mkstring(c->id));
+				json_append_member(json, "_conn_host", json_mkstring(c->host));
+				json_append_member(json, "_conn_port", json_mknumber(c->port));
+				json_append_member(json, "_conn_topic", json_mkstring(topic));
 
 
-			if ((res = interp_print(ud->luad, c->fmt, topic, json)) != NULL) {
-				printf("%s\n", res);
+				if ((res = interp_print(ud->luad, c->fmt, topic, json)) != NULL) {
+					printf("%s\n", res);
+				}
+				json_delete(json);
 			}
-			json_delete(json);
 		}
+	} else {
+                fprintf(stdout, "%s\n", payload);
 	}
 }
 
