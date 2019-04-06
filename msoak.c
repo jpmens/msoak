@@ -132,7 +132,7 @@ void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_m
 
 int main(int argc, char **argv)
 {
-	char *progname, err[1024], clientid[64];
+	char *progname, err[1024], clientid[256], *configfilename;
 	int rc;
 	conn **conn_list, **cp, *c;
 	struct userdata *ud;
@@ -147,10 +147,12 @@ int main(int argc, char **argv)
 		return (2);
 	}
 
+
 	if ((conn_list = load_conn(argv[1], &g)) == NULL) {
 		syslog(LOG_ERR, "Cannot open config at %s: %m", argv[1]);
 		return (2);
 	}
+	configfilename = basename(argv[1]);
 
 	if (g->luascript && *g->luascript) {
 		luad = interp_init(g->luascript, g->verbose);
@@ -173,7 +175,17 @@ int main(int argc, char **argv)
 		ud->c = c;
 		ud->verbose = g->verbose;
 
-		snprintf(clientid, sizeof(clientid), "%s", (c->clientid) ? c->clientid : progname);
+		if (c->clientid) {
+			snprintf(clientid, sizeof(clientid), "%s", c->clientid);
+		} else {
+			/* use hostname:configfilename so that client can run on multiple hosts with same config  */
+			char myhostname[128];
+
+			if (gethostname(myhostname, sizeof(myhostname)) != 0)
+				strlcpy(myhostname, "unknown", sizeof(myhostname));
+
+			snprintf(clientid, sizeof(clientid), "%s:%s", myhostname, configfilename);
+		}
 		c->mosq = mosquitto_new(clientid, true, ud);
 		if (!c->mosq) {
 			syslog(LOG_ERR, "Error: Out of memory");
