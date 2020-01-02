@@ -1,11 +1,18 @@
 CFLAGS=-Wall -Werror -I.
 LDFLAGS=-L /usr/local/lib -lmosquitto -lconfig
 
-### macOS
+### Linux
 CFLAGS += `pkg-config --cflags lua5.3`
 LDFLAGS += `pkg-config --libs lua5.3`
+LDFLAGS += `pkg-config --libs libbsd`
 BINDIR = /usr/local/bin
 MANDIR  = /usr/local/share/man
+
+### macOS
+# CFLAGS += `pkg-config --cflags lua5.3`
+# LDFLAGS += `pkg-config --libs lua5.3`
+# BINDIR = /usr/local/bin
+# MANDIR  = /usr/local/share/man
 
 ### FreeBSD
 # CFLAGS += /usr/local/include/lua53/

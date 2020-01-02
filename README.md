@@ -34,7 +34,7 @@ $ make
 #### debian
 
 ```console
-# apt-get install libconfig-dev liblua5.2-dev # or liblua5.3-dev
+# apt-get install libconfig-dev liblua5.3-dev libmosquitto-dev libbsd-dev
 $ make
 ```
 
