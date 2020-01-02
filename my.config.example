@@ -5,21 +5,21 @@ luascript = "my.lua.example"
 
 servers = (
 	    { id = "888"
-	      port = 1883,
+	      port = 1883
 	      showid = true
 	      showtopic = false
 	      fmt = "station"
 	      topics = [
-	     	"tests/sponge/#",
+	     	"tests/sponge/#"
 	     	]
 	    },
 	    { id = "tmo"
-	      host = "test.mosquitto.org",
+	      host = "test.mosquitto.org"
 	      showid = true
 	      showtopic = true
 	      topics = [
 	     	"home/special",
-		"nothome/dont",
+		"nothome/dont"
 	     	]
-	    },
+	    }
 	);
