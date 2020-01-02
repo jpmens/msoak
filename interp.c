@@ -202,7 +202,7 @@ static int msoak_log(lua_State *lua)
 static int msoak_strftime(lua_State *lua)
 {
 	const char *fmt;
-	long secs;
+	time_t secs;
 	struct tm *tm;
 	char buf[BUFSIZ];
 
