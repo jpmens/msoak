@@ -230,8 +230,11 @@ int main(int argc, char **argv)
 				NULL);		/* ciphers */
 		}
 
+		if ((rc = mosquitto_loop_start(c->mosq)) != MOSQ_ERR_SUCCESS) {
+			syslog(LOG_ERR, "cannot loop_start for %s:%d: rc=0x%X", ud->c->host, ud->c->port, rc);
+			return (rc);
+		}
 
-		// rc = mosquitto_connect(c->mosq, ud->c->host, ud->c->port, 60);
 		rc = mosquitto_connect_async(c->mosq, ud->c->host, ud->c->port, 60);
 		if (rc) {
 			if (rc == MOSQ_ERR_ERRNO) {
@@ -240,16 +243,9 @@ int main(int argc, char **argv)
 			} else {
 				syslog(LOG_ERR, "unable to connect to %s:%d: (%d)", ud->c->host, ud->c->port, rc);
 			}
-			/* do not disconnect and exit; we're connecting asynchronously
-			mosquitto_lib_cleanup();
-			return rc;
-			*/
+			/* do not disconnect and exit; we're connecting asynchronously */
 		}
 
-		if ((rc = mosquitto_loop_start(c->mosq)) != MOSQ_ERR_SUCCESS) {
-			syslog(LOG_ERR, "cannot loop_start for %s:%d: rc=0x%X", ud->c->host, ud->c->port, rc);
-			return (rc);
-		}
 	}
 
 	while (run) {
