@@ -74,7 +74,7 @@ If `fmt` is set, it contains a string with the name of a Lua function from the L
 
 If _msoak_ can decode the payload into JSON (i.e. it begins with a brace (`{`) and is JSON), it will invoke the Lua function to obtain output.
 
-If the above configuration, the `luascript` is loaded from `my.lua` and contains the following:
+In the above configuration, the `luascript` is loaded from `my.lua` and contains the following:
 
 ```lua
 function init()
@@ -147,6 +147,12 @@ You will require:
 ```
 brew install lua
 brew install libconfig
+```
+
+#### freebsd
+
+```
+pkg install lua53 libconfig mosquitto
 ```
 
 #### debian
