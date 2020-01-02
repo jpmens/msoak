@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Jan-Piet Mens <jp@mens.de>
+ * Copyright (C) 2019-2020 Jan-Piet Mens <jp@mens.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +30,6 @@
 #include <libgen.h>
 #include <assert.h>
 #include "ud.h"
-#include "json.h"
 #include "utstring.h"
 #include "print.h"
 
