@@ -12,21 +12,30 @@ You will require:
 
 #### macos
 
-```
-brew install lua
-brew install libconfig
+```console
+$ brew install lua libconfig
+$ make
 ```
 
 #### freebsd
 
+```console
+# pkg install lua53 libconfig mosquitto
+$ make
 ```
-pkg install lua53 libconfig mosquitto
+
+#### openbsd
+
+```console
+# pkg_add libconfig lua-5.3.5
+$ make
 ```
 
 #### debian
 
-```
-apt-get install libconfig-dev liblua5.2-dev # or liblua5.3-dev
+```console
+# apt-get install libconfig-dev liblua5.2-dev # or liblua5.3-dev
+$ make
 ```
 
 ## see also
