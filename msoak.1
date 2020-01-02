@@ -53,7 +53,7 @@ host name or address of the MQTT broker. Defaults to localhost.
 the TCP port number for the MQTT broker. Defaults to 1883.
 .IP clientid 1i
 MQTT clientId to use. The client identifier defaults to
-.B msoak-hostname:basename(configfilename)
+.I msoak-hostname:basename(configfilename)
 so that the pgram can run on multiple hosts with same configuration.
 .IP qos 1i
 MQTT QoS (default 1)
@@ -108,23 +108,24 @@ can decode the payload into JSON (i.e. the message begins with a brace
 .PP
 \fR
 .nf
+.in 1i
 function init()
-   if msoak.verbose then
-      msoak.log(msoak.luascript .. " starting at " .. msoak.strftime("%FT%TZ"))
-   end
+    if msoak.verbose then
+        msoak.log(msoak.luascript .. " starting up")
+    end
 end
 
-function station(topic, _type, d)
-   s = string.format("%s %-20s (%.4f) %s  -> now=%s",
-       d.time, d.name, d.lat, d.station,
+function greet(topic, _type, d)
+    s = string.format("Hello %s -> now=%s", d.name,
         msoak.strftime("%TZ"))
-   return s
+    return s
 end
 
 function exit()
-   msoak.log("Hasta la vista, baby!")
+    msoak.log("Hasta la vista, baby!")
 end
 .fi
+.in
 .PP
 The optional
 .IR init ()
@@ -133,10 +134,42 @@ and
 funcitons are invoked when
 .I msoak
 begins and ends respectively. The
-.I station
-function is invoked for each message
+.I greet
+function is invoked for each message for which a server in the configuration
+.I file
+contains \fBfmt = "greet"\fR.
+.\"------------------------------
+.SS Lua functions
+There are a few variables and functions
 .I msoak
-receives because the configuration contains \fBfmt = "station"\fR.
+implements which are available to the Lua scripts you use.
+.IP version 1i
+returns the
+.I msoak
+version number as a string
+.IP luascript 1i
+returns the file name of the
+.I luascript
+global variable
+.IP verbose 1i
+is a boolean which indicates whether
+.I msoak
+is running in verbose mode
+.IP msoak_log() 1i
+accepts a string which is printed to
+.I stderr
+prefixed by "MSOAKLOG:".
+.IP msoak_strftime() 1i
+expects a
+.I format
+string and integer
+.I seconds
+and implements
+.IR strtime (3)
+for Lua with the specified format and seconds and returns the string result to Lua.
+As a special case, if
+.I seconds is less than one it uses current time.
+
 .\"------------------------------
 .SS JSON
 When configured to use a Lua script file,
@@ -165,9 +198,8 @@ if specified in
 settings with the configuration.
 .\"-----------------------------------------------------------
 .SH BUGS
-What's with the strange name? Just as I started on
-.IR msoak ,
-I learned of
+What's with the strange name? Just as I started working on this program
+I learned about
 .IR sponge (1)
 and loved the name. The rest is history.
 .PP
@@ -185,5 +217,6 @@ Jan-Piet Mens, https://github.com/jpmens/msoak
 .nh
 .BR mosquitto_sub (1),
 .BR sponge (1),
+.BR strftime (1),
 .BR tinylog (8)
 .\" EOF msoak.1
