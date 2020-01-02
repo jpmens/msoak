@@ -5,4 +5,5 @@
 sundry/
 *.config
 *.lua
+*.pdf
 msoak

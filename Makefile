@@ -43,6 +43,9 @@ install: msoak msoak.1
 	install -m755 msoak $(BINDIR)/msoak
 	install -m644 msoak.1 $(MANDIR)/man1/msoak.1
 
+pdf:
+	groff -Tps -man msoak.1 > msoak.tmp_ && pstopdf -i msoak.tmp_ -o msoak.pdf && rm -f msoak.tmp_
+
 clean:
 	rm -f *.o
 clobber: clean
