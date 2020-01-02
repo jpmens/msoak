@@ -2,6 +2,26 @@
 
 Subscribe to different MQTT brokers and topics simultaneously, and soak up what they have to offer.
 
+## startup
+
+Launch _msoak_ with the example configuration file:
+
+```console
+$ msoak example.config
+```
+
+Then publish a message:
+
+```bash
+mosquitto_pub -t tests/sponge/1 -m "$(jo name=Jane number=42)"
+```
+
+you should see the payload as formatted by Lua. The word `loc` at start of output is the _id_ of the connection as specified in `example.config`.
+
+```
+loc tests/sponge/1 Hello Jane -> now=18:12:50Z
+```
+
 ## requirements
 
 You will require:
