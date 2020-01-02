@@ -19,6 +19,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#ifdef __linux__
+#include <bsd/string.h>
+#endif
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
