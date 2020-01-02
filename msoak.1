@@ -1,0 +1,178 @@
+.\" msoak.1 Copyright (C) 2019-2020 Jan-Piet Mens <jp@mens.de>
+.\" ===
+.TH msoak 1 "January 2020" "jpmens" "MQTT utilities"
+.\"-----------------------------------------------------------
+.SH NAME
+msoak \- soak up MQTT messages from multiple brokers
+.\"-----------------------------------------------------------
+.SH SYNOPSIS
+.B msoak
+.I file
+.\"-----------------------------------------------------------
+.SH DESCRIPTION
+.I msoak
+is a utility to simultaneously subscribe to an arbitrary number of topics on any number of MQTT brokers and optionally modify or normalize received payloads before printing them out. This utility was created for being able to back up to a central location messages received by a number of brokers; instead of launching (and having to monitor success of) a large number of
+.IR mosquitto_sub (1)
+programs,
+.I msoak
+took on the job.
+.PP
+.\"-----------------------------------------------------------
+.SH OPTIONS
+None.
+.\"-----------------------------------------------------------
+.SH CONFIGURATION
+.I msoak
+reads the configuration
+.I file
+which contains some global settings and a list (array) of
+.IR servers ,
+each with a number of settings. The file is read by the
+.IR libconfig (3)
+utility functions.
+.\"------------------------------
+.SS global variables
+.IP luascript 1i
+the path to the Lua script file to use. If left unset, no Lua processing is performed.
+.IP verbose 1i
+whether or not to be verbose (default true)
+.PP
+.\"------------------------------
+.SS server array
+
+.IP id 1i
+identifier for the connection, also shown on output. If
+.I id
+is unset we generate a numeric
+.IR id.
+.IP host 1i
+host name or address of the MQTT broker. Defaults to localhost.
+.IP port 1i
+the TCP port number for the MQTT broker. Defaults to 1883.
+.IP clientid 1i
+MQTT clientId to use (default: program name)
+.IP qos 1i
+MQTT QoS (default 1)
+.IP user 1i
+username for the MQTT connection
+.IP pass 1i
+password for the MQTT connection; see
+.I passenv
+to omit from having to specify clear-text passwords in the configuration
+.IR file.
+.IP passenv 1i
+name of environment variable (including $) from which to obtain
+.IR pass .
+.IP retain 1i
+consume retained messages; default true
+.IP cacert 1i
+path to PEM-encoded CA certificate chain for TLS connections to MQTT broker
+.IP showid 1i
+true or false, default true; whether to print
+.I id
+on output.
+.IP showtopic 1i
+true or false, default true; whether to print topic name on output.
+.IP topics 1i
+array of strings with topic branch names for
+.I msoak
+to subscribe to.
+.IP fmt 1i
+optional name of Lua formatting function (see below).
+.PP
+.\"------------------------------
+.SS Formatting
+By default, the received payload is printed to standard output, optionally
+prefixed by the message topic (if
+.I showtopic
+is true, and it is preceeded by the connection identifier if
+.I showid
+is true.
+.PP
+If
+.I fmt
+is set, it contains a string with the name of a Lua function from the Lua
+script. this function is used to format the payload
+.I msoak
+receives; the return value of the function replaces the original payload and is
+printed out.
+.PP
+If
+.I msoak
+can decode the payload into JSON (i.e. the message begins with a brace
+({) and the JSON can be decoded), it will invoke the Lua function to obtain output.
+.PP
+\fR
+.nf
+function init()
+   if msoak.verbose then
+      msoak.log(msoak.luascript .. " starting at " .. msoak.strftime("%FT%TZ"))
+   end
+end
+
+function station(topic, _type, d)
+   s = string.format("%s %-20s (%.4f) %s  -> now=%s",
+       d.time, d.name, d.lat, d.station,
+        msoak.strftime("%TZ"))
+   return s
+end
+
+function exit()
+   msoak.log("Hasta la vista, baby!")
+end
+.fi
+.PP
+The optional
+.IR init ()
+and
+.IR exit ()
+funcitons are invoked when
+.I msoak
+begins and ends respectively. The
+.I station
+function is invoked for each message
+.I msoak
+receives because the configuration contains \fBfmt = "station"\fR.
+.\"------------------------------
+.SS JSON
+When configured to use a Lua script file,
+.I msoak
+attempts to decode incoming JSON payloads and will pass the decoded JSON
+elements to the configured
+.I fmt
+function as a table with these additional elements in it
+.IP _conn_id 1i
+the original connection
+.I id
+.IP _conn_host 1i
+the hostname of the connection
+.IP _conn_port 1i
+the port number of the connection
+.IP _conn_topic 1i
+the MQTT topic on which the original payload message was received
+.PP
+Note that if no luascript was specified and the payload contains JSON it will be dumped as is to stdout.
+.\"-----------------------------------------------------------
+.SH ENVIRONMENT
+Any number of environment variables may be used by
+.I msoak
+if specified in
+.I passenv
+settings with the configuration.
+.\"-----------------------------------------------------------
+.SH BUGS
+What's with the strange name? Just as I started on
+.IR msoak ,
+I learned of
+.IR sponge (1)
+and loved the name. The rest is history.
+.\"-----------------------------------------------------------
+.SH AUTHOR
+Jan-Piet Mens, https://github.com/jpmens/msoak
+.\"-----------------------------------------------------------
+.SH SEE ALSO
+.nh
+.BR mosquitto_sub (1),
+.BR sponge (1),
+.BR tinylog (8)
+.\" EOF msoak.1
