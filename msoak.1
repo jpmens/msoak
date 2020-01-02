@@ -67,7 +67,7 @@ to omit from having to specify clear-text passwords in the configuration
 .IP passenv 1i
 name of environment variable (including $) from which to obtain
 .IR pass .
-.IP retain 1i
+.IP showretained 1i
 consume retained messages; default true
 .IP cacert 1i
 path to PEM-encoded CA certificate chain for TLS connections to MQTT broker
@@ -89,7 +89,7 @@ optional name of Lua formatting function (see below).
 By default, the received payload is printed to standard output, optionally
 prefixed by the message topic (if
 .I showtopic
-is true, and it is preceeded by the connection identifier if
+is true), and it is preceeded by the connection identifier if
 .I showid
 is true.
 .PP
