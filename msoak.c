@@ -131,7 +131,7 @@ void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_m
 
 int main(int argc, char **argv)
 {
-	char *progname, err[1024], clientid[256], *configfilename;
+	char *progname, err[1024], clientid[256], *configfilename, *p;
 	int rc;
 	conn **conn_list, **cp, *c;
 	struct userdata *ud;
@@ -151,7 +151,9 @@ int main(int argc, char **argv)
 		syslog(LOG_ERR, "Cannot open config at %s: %m", argv[1]);
 		return (2);
 	}
-	configfilename = basename(argv[1]);
+	configfilename = strdup(basename(argv[1]));
+	if ((p = strrchr(configfilename, '.')) != NULL)
+		*p = 0;
 
 	if (g->luascript && *g->luascript) {
 		luad = interp_init(g->luascript, g->verbose);
@@ -177,13 +179,13 @@ int main(int argc, char **argv)
 		if (c->clientid) {
 			snprintf(clientid, sizeof(clientid), "%s", c->clientid);
 		} else {
-			/* use hostname:configfilename so that client can run on multiple hosts with same config  */
+			/* use msoak-hostname:configfilename so that client can run on multiple hosts with same config  */
 			char myhostname[128];
 
 			if (gethostname(myhostname, sizeof(myhostname)) != 0)
 				strlcpy(myhostname, "unknown", sizeof(myhostname));
 
-			snprintf(clientid, sizeof(clientid), "%s:%s", myhostname, configfilename);
+			snprintf(clientid, sizeof(clientid), "msoak-%s:%s", myhostname, configfilename);
 		}
 		c->mosq = mosquitto_new(clientid, true, ud);
 		if (!c->mosq) {
