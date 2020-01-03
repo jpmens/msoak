@@ -43,7 +43,7 @@ install: msoak msoak.1
 	install -m755 msoak $(DESTDIR)$(BINDIR)/msoak
 	install -m644 msoak.1 $(DESTDIR)$(MANDIR)/man1/msoak.1
 
-pdf:
+msoak.pdf: msoak.1
 	groff -Tps -man msoak.1 > msoak.tmp_ && pstopdf -i msoak.tmp_ -o msoak.pdf && rm -f msoak.tmp_
 
 clean:
