@@ -33,7 +33,7 @@ You will require:
 #### macos
 
 ```console
-$ brew install lua libconfig
+$ brew install lua libconfig mosquitto
 $ make
 ```
 
@@ -47,7 +47,7 @@ $ make
 #### openbsd
 
 ```console
-# pkg_add libconfig lua-5.3.5
+# pkg_add libconfig lua-5.3.5 mosquitto
 $ make
 ```
 
