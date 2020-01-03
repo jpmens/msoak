@@ -40,8 +40,8 @@ json.o: json.c json.h
 interp.o: interp.c interp.h version.h
 
 install: msoak msoak.1
-	install -m755 msoak $(BINDIR)/msoak
-	install -m644 msoak.1 $(MANDIR)/man1/msoak.1
+	install -m755 msoak $(DESTDIR)$(BINDIR)/msoak
+	install -m644 msoak.1 $(DESTDIR)$(MANDIR)/man1/msoak.1
 
 pdf:
 	groff -Tps -man msoak.1 > msoak.tmp_ && pstopdf -i msoak.tmp_ -o msoak.pdf && rm -f msoak.tmp_
