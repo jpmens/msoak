@@ -6,4 +6,6 @@ sundry/
 *.config
 *.lua
 *.pdf
+!example.config
+!example.lua
 msoak
