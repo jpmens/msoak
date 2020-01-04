@@ -16,7 +16,7 @@ Then publish a message:
 mosquitto_pub -t tests/sponge/1 -m "$(jo name=Jane number=42)"
 ```
 
-you should see the payload as formatted by Lua. The word `loc` at start of output is the _id_ of the connection as specified in `example.config`.
+you should see the payload as formatted by Lua. The word `loc` at start of output is the _id_ of the connection as specified in `example.config`. ([jo](https://github.com/jpmens/jo) is a utility to easily produce JSON output in a shell, and it may well be available as a package for your system of choice.)
 
 ```
 loc tests/sponge/1 Hello Jane -> now=18:12:50Z
