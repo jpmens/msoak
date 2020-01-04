@@ -30,6 +30,8 @@ You will require:
 * [libconfig](http://www.hyperrealm.com/libconfig/)
 * [Lua](http://www.lua.org)
 
+Edit the `Makefile` to select the system you are building for.
+
 #### macos
 
 ```console
@@ -51,7 +53,7 @@ $ make
 $ make
 ```
 
-#### debian
+#### debian, ubuntu
 
 ```console
 # apt-get install libconfig-dev liblua5.3-dev libmosquitto-dev libbsd-dev
