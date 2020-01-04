@@ -24,7 +24,13 @@ loc tests/sponge/1 Hello Jane -> now=18:12:50Z
 
 ## requirements
 
-You will require:
+### running
+
+To test msoak, you will need a source of MQTT test traffic, This could be a test server or a production server that you run, or one of the [public test servers](https://github.com/mqtt/mqtt.github.io/wiki/public_brokers). The example configuration assumes that you have a test server running on localhost; edit this to suit.
+
+### building
+
+In order to build `msoak` you will require:
 
 * [libmosquitto](http://mosquitto.org)
 * [libconfig](http://www.hyperrealm.com/libconfig/)

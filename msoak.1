@@ -54,11 +54,15 @@ utility functions. This is a short example:
 luascript = "example.lua"
 
 servers = (
-            { id = "loc"
+            { id = "local"
               host = "localhost"
+              port = 1883
               fmt = "greet"
+              showid = true
+              showtopic = true
               topics = [
-                     "tests/sponge/#"
+                 "tests/sponge/#",
+                 "some/thing/else/+/+"
               ]
             },
             { id = "tmo"
