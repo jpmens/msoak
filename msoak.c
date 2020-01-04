@@ -36,6 +36,8 @@
 #include "utstring.h"
 #include "print.h"
 
+#define dim(x) 	( sizeof(x) / sizeof(x[0]) )
+
 static int run = true;
 
 static void catcher(int signo)
@@ -67,10 +69,13 @@ static char *mosquitto_reason(int rc)
 		"MOSQ_ERR_PLUGIN_DEFER",	/* 17 */
 		"MOSQ_ERR_MALFORMED_UTF8",	/* 18 */
 		"MOSQ_ERR_KEEPALIVE",		/* 19 */
+#ifdef MOSQ_ERR_LOOKUP
 		"MOSQ_ERR_LOOKUP"		/* 20 */
+#endif
+		NULL
 	};
 
-	return ((rc >= 0 && rc <= MOSQ_ERR_LOOKUP) ? reasons[rc] : "unknown reason");
+	return ((rc >= 0 && rc < dim(reasons)) ? reasons[rc] : "unknown reason");
 }
 
 void on_connect(struct mosquitto *mosq, void *userdata, int reason)
