@@ -66,6 +66,14 @@ $ make
 $ make
 ```
 
+### alpine
+
+```console
+# apk add build-base libconfig-dev mosquitto-dev lua5.3-dev libbsd-dev
+$ make
+```
+
+
 ## see also
 
 * [mqttwarn](https://github.com/jpmens/mqttwarn)

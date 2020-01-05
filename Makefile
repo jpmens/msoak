@@ -1,12 +1,18 @@
 CFLAGS=-Wall -Werror -I.
 LDFLAGS=-L /usr/local/lib -lmosquitto -lconfig
 
-### Linux
+### Debian,Ubuntu
 # CFLAGS += `pkg-config --cflags lua5.3`
 # LDFLAGS += `pkg-config --libs lua5.3`
 # LDFLAGS += `pkg-config --libs libbsd`
 # BINDIR = /usr/local/bin
 # MANDIR  = /usr/local/share/man
+
+### Alpine
+# CFLAGS = -I/usr/include/lua5.3 -Wall -I.
+# LDFLAGS += -L/usr/lib/lua5.3 -llua -lbsd
+# BINDIR = /usr/local/bin
+# MANDIR = /usr/local/share/man
 
 ### macOS
 CFLAGS += `pkg-config --cflags lua5.3`
@@ -25,7 +31,6 @@ MANDIR  = /usr/local/share/man
 # LDFLAGS += -llua5.3
 # BINDIR = /usr/local/bin
 # MANDIR  = /usr/local/man
-
 
 OBJS = conn.o json.o print.o interp.o
 

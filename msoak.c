@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#ifdef __linux__
+#if defined(__linux__) && defined(__GLIBC__)
 #include <bsd/string.h>
 #endif
 #include <string.h>
