@@ -1,0 +1,14 @@
+#!/bin/sh
+# primitively detect which OS/flavour we're going to
+# make(1)
+# This script prints out the os name/version which 
+# is used as Makefile target on default `make detect'
+
+(
+	if test -f /etc/os-release; then
+		. /etc/os-release
+		echo $ID
+	else
+		uname -s
+	fi
+) | tr '[A-Z]' '[a-z]'
