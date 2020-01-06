@@ -37,7 +37,7 @@ freebsd:
 	@$(MAKE) $(TARGET) CFLAGS="$(CFLAGS) -I/usr/local/include -I/usr/local/include/lua53/" \
 		LDFLAGS="$(LDFLAGS) -llua-5.3" \
 		BINDIR=/usr/local/bin \
-		MANDIR=/usr/local/share/man
+		MANDIR=/usr/local/man
 
 openbsd:
 	@$(MAKE) $(TARGET) CFLAGS="$(CFLAGS) -I/usr/local/include -I/usr/local/include/lua-5.3/" \
