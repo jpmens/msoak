@@ -7,6 +7,9 @@ msoak \- consume messages from arbitrary MQTT brokers and subscriptions
 .\"-----------------------------------------------------------
 .SH SYNOPSIS
 .B msoak
+[
+.I -v
+]
 .I configuration
 .\"-----------------------------------------------------------
 .SH DESCRIPTION
@@ -36,7 +39,8 @@ msoak my.config | tinylog -k 30 -s 1077936128 -z archive
 
 .\"-----------------------------------------------------------
 .SH OPTIONS
-None.
+.IP \fC-v\fR 0.5i
+print version information and exit.
 .\"-----------------------------------------------------------
 .SH CONFIGURATION
 .I msoak

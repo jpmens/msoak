@@ -32,9 +32,11 @@
 #include <syslog.h>
 #include <libgen.h>
 #include <assert.h>
+#include <getopt.h>
 #include "ud.h"
 #include "utstring.h"
 #include "print.h"
+#include "version.h"
 
 #define dim(x) 	( sizeof(x) / sizeof(x[0]) )
 
@@ -140,7 +142,7 @@ void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_m
 int main(int argc, char **argv)
 {
 	char *progname, err[1024], clientid[256], *configfilename, *p;
-	int rc;
+	int rc, ch;
 	conn **conn_list, **cp, *c;
 	struct userdata *ud;
 	struct luadata *luad = NULL;
@@ -148,6 +150,22 @@ int main(int argc, char **argv)
 
 	progname = basename(*argv);
 	openlog(progname, LOG_PERROR, LOG_DAEMON);
+
+	while ((ch = getopt(argc, argv, "v")) != EOF) {
+		switch (ch) {
+			case 'v':
+				printf("%s %s\n", progname, VERSION);
+				return (0);
+				break;
+			default:
+				fprintf(stderr, "Usage: %s [-v] config-file\n", *argv);
+				return (2);
+				break;
+		}
+	}
+
+	argc -= optind - 1;
+	argv += optind - 1;
 
 	if (argc != 2) {
 		fprintf(stderr, "Usage: %s file.config\n", *argv);

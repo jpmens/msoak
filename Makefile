@@ -49,7 +49,7 @@ OBJS = conn.o json.o print.o interp.o
 
 all: msoak
 
-msoak: msoak.c ud.h interp.h $(OBJS)
+msoak: msoak.c ud.h interp.h $(OBJS) version.h
 	$(CC) $(CFLAGS) -o msoak msoak.c $(OBJS) $(LDFLAGS)
 
 conn.o: conn.c conn.h
