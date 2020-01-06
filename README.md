@@ -1,6 +1,6 @@
 # msoak
 
-Subscribe to different MQTT brokers and topics simultaneously, and soak up what they have to offer.
+Subscribe to different MQTT brokers and topics simultaneously, and soak up what they have to offer. _msoak_ is documented in it's man page of which there is a version as PDF.
 
 ## startup
 
