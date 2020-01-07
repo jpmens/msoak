@@ -61,7 +61,9 @@ install: msoak msoak.1
 	@$(MAKE) TARGET=realinstall $(OS)
 
 realinstall: msoak msoak.1
+	install -d $(DESTDIR)$(BINDIR)
 	install -m755 msoak $(DESTDIR)$(BINDIR)/msoak
+	install -d $(DESTDIR)$(MANDIR)
 	install -m644 msoak.1 $(DESTDIR)$(MANDIR)/man1/msoak.1
 
 msoak.pdf: msoak.1
