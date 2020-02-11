@@ -2,5 +2,5 @@ freebsd_instance:
     image_family: freebsd-12-1
 
 task:
-    install_script: pkg install -y mosquitto
+    install_script: pkg install -y lua53 libconfig mosquitto
     compile_script: make freebsd
